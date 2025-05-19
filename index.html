@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>七彩灯光模拟</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: #222;
+            color: white;
+        }
+        
+        .control-panel {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        button {
+            padding: 12px 24px;
+            margin: 0 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .stop-btn {
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+        }
+        
+        .lamp-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .lamp {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.3);
+            transition: all 0.5s ease-in-out;
+            animation-duration: 3.5s;
+            animation-iteration-count: infinite;
+            animation-timing-function: ease-in-out;
+            opacity: 0.9;
+        }
+        
+        .lamp::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: white;
+            opacity: 0.3;
+            filter: blur(5px);
+        }
+        
+        /* 七种颜色定义 */
+        .color-1 { background: #FF0000; animation-name: colorChange1; }
+        .color-2 { background: #FF7F00; animation-name: colorChange2; }
+        .color-3 { background: #FFFF00; animation-name: colorChange3; }
+        .color-4 { background: #00FF00; animation-name: colorChange4; }
+        .color-5 { background: #0000FF; animation-name: colorChange5; }
+        .color-6 { background: #4B0082; animation-name: colorChange6; }
+        .color-7 { background: #9400D3; animation-name: colorChange7; }
+        
+        /* 七种颜色的动画关键帧 */
+        @keyframes colorChange1 {
+            0%, 100% { background: #FF0000; box-shadow: 0 0 30px 5px rgba(255, 0, 0, 0.7); }
+            14% { background: #FF7F00; box-shadow: 0 0 30px 5px rgba(255, 127, 0, 0.7); }
+            28% { background: #FFFF00; box-shadow: 0 0 30px 5px rgba(255, 255, 0, 0.7); }
+            42% { background: #00FF00; box-shadow: 0 0 30px 5px rgba(0, 255, 0, 0.7); }
+            57% { background: #0000FF; box-shadow: 0 0 30px 5px rgba(0, 0, 255, 0.7); }
+            71% { background: #4B0082; box-shadow: 0 0 30px 5px rgba(75, 0, 130, 0.7); }
+            85% { background: #9400D3; box-shadow: 0 0 30px 5px rgba(148, 0, 211, 0.7); }
+        }
+        
+        @keyframes colorChange2 {
+            0%, 100% { background: #FF7F00; box-shadow: 0 0 30px 5px rgba(255, 127, 0, 0.7); }
+            14% { background: #FFFF00; box-shadow: 0 0 30px 5px rgba(255, 255, 0, 0.7); }
+            28% { background: #00FF00; box-shadow: 0 0 30px 5px rgba(0, 255, 0, 0.7); }
+            42% { background: #0000FF; box-shadow: 0 0 30px 5px rgba(0, 0, 255, 0.7); }
+            57% { background: #4B0082; box-shadow: 0 0 30px 5px rgba(75, 0, 130, 0.7); }
+            71% { background: #9400D3; box-shadow: 0 0 30px 5px rgba(148, 0, 211, 0.7); }
+            85% { background: #FF0000; box-shadow: 0 0 30px 5px rgba(255, 0, 0, 0.7); }
+        }
+        
+        @keyframes colorChange3 {
+            0%, 100% { background: #FFFF00; box-shadow: 0 0 30px 5px rgba(255, 255, 0, 0.7); }
+            14% { background: #00FF00; box-shadow: 0 0 30px 5px rgba(0, 255, 0, 0.7); }
+            28% { background: #0000FF; box-shadow: 0 0 30px 5px rgba(0, 0, 255, 0.7); }
+            42% { background: #4B0082; box-shadow: 0 0 30px 5px rgba(75, 0, 130, 0.7); }
+            57% { background: #9400D3; box-shadow: 0 0 30px 5px rgba(148, 0, 211, 0.7); }
+            71% { background: #FF0000; box-shadow: 0 0 30px 5px rgba(255, 0, 0, 0.7); }
+            85% { background: #FF7F00; box-shadow: 0 0 30px 5px rgba(255, 127, 0, 0.7); }
+        }
+        
+        @keyframes colorChange4 {
+            0%, 100% { background: #00FF00; box-shadow: 0 0 30px 5px rgba(0, 255, 0, 0.7); }
+            14% { background: #0000FF; box-shadow: 0 0 30px 5px rgba(0, 0, 255, 0.7); }
+            28% { background: #4B0082; box-shadow: 0 0 30px 5px rgba(75, 0, 130, 0.7); }
+            42% { background: #9400D3; box-shadow: 0 0 30px 5px rgba(148, 0, 211, 0.7); }
+            57% { background: #FF0000; box-shadow: 0 0 30px 5px rgba(255, 0, 0, 0.7); }
+            71% { background: #FF7F00; box-shadow: 0 0 30px 5px rgba(255, 127, 0, 0.7); }
+            85% { background: #FFFF00; box-shadow: 0 0 30px 5px rgba(255, 255, 0, 0.7); }
+        }
+        
+        @keyframes colorChange5 {
+            0%, 100% { background: #0000FF; box-shadow: 0 0 30px 5px rgba(0, 0, 255, 0.7); }
+            14% { background: #4B0082; box-shadow: 0 0 30px 5px rgba(75, 0, 130, 0.7); }
+            28% { background: #9400D3; box-shadow: 0 0 30px 5px rgba(148, 0, 211, 0.7); }
+            42% { background: #FF0000; box-shadow: 0 0 30px 5px rgba(255, 0, 0, 0.7); }
+            57% { background: #FF7F00; box-shadow: 0 0 30px 5px rgba(255, 127, 0, 0.7); }
+            71% { background: #FFFF00; box-shadow: 0 0 30px 5px rgba(255, 255, 0, 0.7); }
+            85% { background: #00FF00; box-shadow: 0 0 30px 5px rgba(0, 255, 0, 0.7); }
+        }
+        
+        @keyframes colorChange6 {
+            0%, 100% { background: #4B0082; box-shadow: 0 0 30px 5px rgba(75, 0, 130, 0.7); }
+            14% { background: #9400D3; box-shadow: 0 0 30px 5px rgba(148, 0, 211, 0.7); }
+            28% { background: #FF0000; box-shadow: 0 0 30px 5px rgba(255, 0, 0, 0.7); }
+            42% { background: #FF7F00; box-shadow: 0 0 30px 5px rgba(255, 127, 0, 0.7); }
+            57% { background: #FFFF00; box-shadow: 0 0 30px 5px rgba(255, 255, 0, 0.7); }
+            71% { background: #00FF00; box-shadow: 0 0 30px 5px rgba(0, 255, 0, 0.7); }
+            85% { background: #0000FF; box-shadow: 0 0 30px 5px rgba(0, 0, 255, 0.7); }
+        }
+        
+        @keyframes colorChange7 {
+            0%, 100% { background: #9400D3; box-shadow: 0 0 30px 5px rgba(148, 0, 211, 0.7); }
+            14% { background: #FF0000; box-shadow: 0 0 30px 5px rgba(255, 0, 0, 0.7); }
+            28% { background: #FF7F00; box-shadow: 0 0 30px 5px rgba(255, 127, 0, 0.7); }
+            42% { background: #FFFF00; box-shadow: 0 0 30px 5px rgba(255, 255, 0, 0.7); }
+            57% { background: #00FF00; box-shadow: 0 0 30px 5px rgba(0, 255, 0, 0.7); }
+            71% { background: #0000FF; box-shadow: 0 0 30px 5px rgba(0, 0, 255, 0.7); }
+            85% { background: #4B0082; box-shadow: 0 0 30px 5px rgba(75, 0, 130, 0.7); }
+        }
+    </style>
+</head>
+<body>
+    <div class="control-panel">
+        <h1>七彩灯光模拟</h1>
+        <button id="startBtn" class="start-btn">启动</button>
+        <button id="stopBtn" class="stop-btn">停止</button>
+    </div>
+    
+    <div class="lamp-container">
+        <div class="lamp color-1"></div>
+        <div class="lamp color-2"></div>
+        <div class="lamp color-3"></div>
+        <div class="lamp color-4"></div>
+        <div class="lamp color-5"></div>
+        <div class="lamp color-6"></div>
+        <div class="lamp color-7"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            const lamps = document.querySelectorAll('.lamp');
+            
+            // 初始状态：动画暂停
+            lamps.forEach(lamp => {
+                lamp.style.animationPlayState = 'paused';
+            });
+            
+            // 启动按钮点击事件
+            startBtn.addEventListener('click', function() {
+                lamps.forEach(lamp => {
+                    lamp.style.animationPlayState = 'running';
+                });
+            });
+            
+            // 停止按钮点击事件
+            stopBtn.addEventListener('click', function() {
+                lamps.forEach(lamp => {
+                    lamp.style.animationPlayState = 'paused';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
